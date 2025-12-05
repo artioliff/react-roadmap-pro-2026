@@ -1,10 +1,13 @@
+/* ===========================
+   TOKENS BÁSICOS
+   =========================== */
+
 :root {
-  --bg: #f5f5f7;
-  --bg-elevated: #ffffff;
+  --bg-page: #f5f5f7;
+  --bg-surface: #ffffff;
   --border-subtle: #e0e0e6;
   --accent: #111827;
   --accent-soft: #e5e7eb;
-  --accent-muted: #6b7280;
   --text-main: #111827;
   --text-muted: #6b7280;
   --radius-lg: 18px;
@@ -13,6 +16,10 @@
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Segoe UI", sans-serif;
 }
+
+/* ===========================
+   RESET / BASE
+   =========================== */
 
 *,
 *::before,
@@ -24,50 +31,68 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--bg);
-  color: var(--text-main);
-  font-family: var(--font-sans);
 }
 
 body {
+  background: var(--bg-page);
+  color: var(--text-main);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
-/* LAYOUT */
+/* Links “neutros” dentro do texto */
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-soft);
+}
+
+a:hover {
+  text-decoration-color: var(--accent);
+}
+
+/* ===========================
+   LAYOUT PRINCIPAL
+   =========================== */
 
 .page {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: 260px minmax(0, 1fr);
   min-height: 100vh;
 }
 
+/* Em telas menores, sidebar vai para cima */
+@media (max-width: 880px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===========================
+   SIDEBAR
+   =========================== */
+
 .sidebar {
   border-right: 1px solid var(--border-subtle);
-  padding: 24px 20px;
+  background: linear-gradient(180deg, #f9fafb, #f3f4f6);
+  padding: 22px 18px;
   position: sticky;
   top: 0;
   align-self: start;
   max-height: 100vh;
   overflow-y: auto;
-  background: linear-gradient(180deg, #f9fafb, #f3f4f6);
 }
-
-.content {
-  padding: 32px 40px 40px;
-}
-
-/* SIDEBAR */
 
 .brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .brand-dot {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 999px;
   background: radial-gradient(circle at 20% 20%, #111827, #6b7280);
 }
@@ -83,39 +108,45 @@ body {
 }
 
 .brand-subtitle {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
 }
 
+/* Navegação */
+
 .nav-title {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-  letter-spacing: 0.09em;
   color: var(--text-muted);
-  margin: 0 0 10px;
+  margin: 0 0 6px;
 }
 
 .nav ul {
   list-style: none;
+  margin: 0 0 20px;
   padding: 0;
-  margin: 0 0 24px;
 }
 
 .nav li + li {
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .nav button {
   width: 100%;
-  border: none;
-  background: transparent;
   text-align: left;
-  padding: 7px 10px;
   border-radius: 999px;
-  cursor: pointer;
-  font-size: 0.82rem;
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 7px 10px;
+  font-size: 0.86rem;
   color: var(--text-muted);
-  transition: background 0.15s ease, color 0.15s ease, transform 0.08s ease;
+  cursor: pointer;
+  transition:
+    background 0.14s ease,
+    color 0.14s ease,
+    border-color 0.14s ease,
+    transform 0.06s ease;
 }
 
 .nav button:hover {
@@ -124,103 +155,123 @@ body {
   transform: translateY(-1px);
 }
 
+/* estado ativo – JS deve adicionar/remover .active no botão */
 .nav button.active {
   background: #111827;
   color: #f9fafb;
+  border-color: #111827;
 }
 
-.meta {
-  border-radius: var(--radius-md);
-  padding: 12px 12px;
-  background: #111827;
-  color: #e5e7eb;
-  font-size: 0.8rem;
-}
+/* Bloco “meta” */
 
 .meta-label {
-  margin: 0 0 4px;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  opacity: 0.7;
+  color: var(--text-muted);
+  margin: 0 0 4px;
 }
 
 .meta-text {
   margin: 0;
-  line-height: 1.5;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
-/* HERO */
+/* Sidebar em mobile: ocupa largura toda em cima */
+
+@media (max-width: 880px) {
+  .sidebar {
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    display: block;
+  }
+}
+
+/* ===========================
+   ÁREA DE CONTEÚDO
+   =========================== */
+
+.content {
+  padding: 26px 30px 32px;
+}
+
+/* hero */
 
 .hero-kicker {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
   color: var(--text-muted);
-  margin: 0 0 10px;
+  margin: 0 0 4px;
 }
 
 .hero h1 {
-  font-size: clamp(1.8rem, 2.3vw, 2.4rem);
-  margin: 0 0 12px;
+  margin: 0 0 8px;
+  font-size: 1.7rem;
   letter-spacing: -0.03em;
 }
 
 .hero-subtitle {
-  margin: 0 0 24px;
-  max-width: 640px;
+  margin: 0 0 22px;
   font-size: 0.95rem;
   color: var(--text-muted);
+  max-width: 52rem;
 }
 
-/* MODULES */
+/* ===========================
+   MÓDULOS / CARDS
+   =========================== */
 
 .modules {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
+/* Cada módulo = um “card” grande */
+
 .module {
-  background: var(--bg-elevated);
+  background: var(--bg-surface);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-subtle);
   padding: 18px 18px 16px;
   box-shadow: var(--shadow-soft);
-  transition: border-color 0.15s ease, transform 0.15s ease,
-    box-shadow 0.15s ease, background 0.15s ease;
+  display: none; /* escondido por padrão */
 }
 
-.module:hover {
-  border-color: #d1d5db;
-  transform: translateY(-1px);
+.module.active {
+  display: block;
 }
 
 .module-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  margin-bottom: 10px;
 }
 
 .module-header h2 {
-  font-size: 1rem;
   margin: 0;
+  font-size: 1.05rem;
 }
 
 .module-badge {
-  font-size: 0.75rem;
-  padding: 4px 10px;
+  margin: 0;
+  padding: 2px 9px;
   border-radius: 999px;
-  background: var(--accent-soft);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: #f3f4f6;
   color: var(--text-muted);
-  white-space: nowrap;
 }
 
 .module-body {
-  margin-top: 12px;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
 }
 
 .module-goal {
@@ -228,15 +279,17 @@ body {
   color: var(--text-main);
 }
 
-.module-project {
-  margin: 16px 0 0;
-  color: var(--text-main);
+.module-goal strong {
+  font-weight: 600;
 }
+
+/* Grid interno dos módulos (3 colunas em desktop) */
 
 .module-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 12px;
 }
 
 .module-grid h3 {
@@ -245,60 +298,27 @@ body {
 }
 
 .module-grid ul {
-  list-style: none;
-  padding-left: 0;
   margin: 0;
-  font-size: 0.87rem;
+  padding-left: 18px;
+  font-size: 0.88rem;
   color: var(--text-muted);
 }
 
-.module-grid li {
-  padding-left: 0;
-  margin-bottom: 4px;
+.module-grid li + li {
+  margin-top: 2px;
 }
 
-/* Highlight active module */
-.module.active {
-  border-color: #111827;
-  background: #f9fafb;
-}
+/* Colunas em 2 / 1 quando a tela encolhe */
 
-/* CODE */
-
-code {
-  font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
-  font-size: 0.85em;
-  background: #f3f4f6;
-  padding: 2px 5px;
-  border-radius: 6px;
-}
-
-/* FOOTER */
-
-.footer {
-  margin-top: 32px;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-/* RESPONSIVE */
-
-@media (max-width: 960px) {
-  .page {
-    grid-template-columns: 1fr;
+@media (max-width: 1024px) {
+  .module-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
 
-  .sidebar {
-    position: static;
-    max-height: none;
-    border-right: none;
-    border-bottom: 1px solid var(--border-subtle);
-    padding-bottom: 18px;
-  }
-
+@media (max-width: 720px) {
   .content {
-    padding: 20px 18px 28px;
+    padding: 18px 16px 24px;
   }
 
   .module-grid {
@@ -306,16 +326,35 @@ code {
   }
 }
 
-@media (max-width: 520px) {
-  .hero h1 {
-    font-size: 1.6rem;
-  }
+.module-project {
+  margin: 0;
+  font-size: 0.87rem;
+  color: var(--text-muted);
+}
 
-  .sidebar {
-    padding: 16px 16px 14px;
-  }
+.module-project strong {
+  color: var(--text-main);
+}
 
-  .nav button {
-    font-size: 0.78rem;
-  }
+/* ===========================
+   FOOTER
+   =========================== */
+
+.footer {
+  margin-top: 22px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ===========================
+   UTILITÁRIOS PEQUENOS
+   =========================== */
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.85em;
+  background: #f3f4f6;
+  padding: 2px 5px;
+  border-radius: 6px;
 }

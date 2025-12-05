@@ -1,70 +1,55 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const navButtons = document.querySelectorAll(".nav button[data-target]");
+  const buttons = document.querySelectorAll(".nav button");
   const modules = document.querySelectorAll(".module");
 
-  // Scroll suave ao clicar em um módulo na sidebar
-  navButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const targetId = button.getAttribute("data-target");
-      const section = document.getElementById(targetId);
-      if (!section) return;
+  // -------------- FUNÇÃO PARA TROCAR O MÓDULO --------------
+  function activateModule(targetId) {
+    // Remove active de todos os módulos
+    modules.forEach((m) => m.classList.remove("active"));
 
-      section.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+    // Ativa módulo clicado
+    const mod = document.getElementById(targetId);
+    if (mod) mod.classList.add("active");
 
-      setActiveNav(targetId);
-    });
-  });
+    // Marca botão ativo
+    buttons.forEach((btn) =>
+      btn.classList.toggle("active", btn.dataset.target === targetId)
+    );
 
-  function setActiveNav(targetId) {
-    navButtons.forEach((btn) => {
-      const id = btn.getAttribute("data-target");
-      btn.classList.toggle("active", id === targetId);
-    });
-
-    modules.forEach((mod) => {
-      mod.classList.toggle("active", mod.id === targetId);
+    // Subir para o topo da página ao trocar de módulo
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
     });
   }
 
-  // Scroll spy simples: destaca o módulo visível
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const visibleEntry = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-      if (!visibleEntry) return;
-      const id = visibleEntry.target.id;
-      setActiveNav(id);
-    },
-    {
-      root: null,
-      threshold: 0.35,
-    }
-  );
-
-  modules.forEach((section) => observer.observe(section));
-
-  // Toggle simples de "abrir/fechar" visual ao clicar no header do módulo
-  modules.forEach((module) => {
-    const header = module.querySelector(".module-header");
-    const body = module.querySelector(".module-body");
-
-    if (!header || !body) return;
-
-    header.addEventListener("click", (e) => {
-      // evita conflito quando o clique veio de um botão da sidebar
-      if (e.target.closest("button[data-target]")) return;
-      body.style.display =
-        body.style.display === "none" || body.style.display === ""
-          ? "block"
-          : "none";
+  // -------------- EVENTOS DOS BOTÕES --------------
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = btn.dataset.target;
+      activateModule(target);
     });
+  });
 
-    // Por padrão, todos abertos; se quiser começar fechado:
-    // body.style.display = "none";
+  // -------------- ATIVAR O PRIMEIRO MÓDULO POR PADRÃO --------------
+  if (buttons.length > 0) {
+    const first = buttons[0].dataset.target;
+    activateModule(first);
+  }
+
+  // -------------- MARCAR BOTÃO CORRETO AO CARREGAR COM ÂNCORA (opcional) --------------
+  if (location.hash) {
+    const id = location.hash.replace("#", "");
+    const exists = document.getElementById(id);
+    if (exists) activateModule(id);
+  }
+
+  // -------------- ATUALIZA O HASH NA URL (opcional e útil) --------------
+  function updateHash(id) {
+    history.replaceState(null, "", "#" + id);
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => updateHash(btn.dataset.target));
   });
 });
